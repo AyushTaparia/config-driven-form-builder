@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useCallback, useEffect, useRef, useReducer, useState } from 'react';
 import { builderReducer } from './builder/builderReducer';
 import { FormBuilder } from './builder/FormBuilder';
 import { FormRenderer } from './components/FormRenderer';
@@ -27,7 +27,7 @@ async function fakeSubmit(_data: SubmittedData): Promise<void> {
 }
 
 type Mode = 'builder' | 'preview';
-type SaveMessage = { kind: 'success' | 'error'; text: string } | null;
+type Toast = { kind: 'success' | 'error'; text: string } | null;
 
 export function App() {
   const [config, dispatch] = useReducer(builderReducer, undefined, loadInitialConfig);
@@ -35,7 +35,18 @@ export function App() {
   const [selectedId, setSelectedId] = useState<string | null>(
     () => config.fields.find((f) => f.key === 'department')?.id ?? config.fields[0]?.id ?? null,
   );
-  const [saveMessage, setSaveMessage] = useState<SaveMessage>(null);
+  const [toast, setToast] = useState<Toast>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const showToast = useCallback((msg: Toast) => {
+    clearTimeout(timerRef.current);
+    setToast(msg);
+    if (msg) {
+      timerRef.current = setTimeout(() => setToast(null), 3000);
+    }
+  }, []);
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
 
   const removeField = (id: string) => {
     if (id === selectedId) {
@@ -48,14 +59,14 @@ export function App() {
 
   const save = () => {
     if (hasBlockingIssues(validateConfig(config))) {
-      setSaveMessage({ kind: 'error', text: 'Fix the configuration errors before saving.' });
+      showToast({ kind: 'error', text: 'Fix the configuration errors before saving.' });
       return;
     }
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-      setSaveMessage({ kind: 'success', text: 'Form saved in this browser.' });
+      showToast({ kind: 'success', text: 'Form saved successfully.' });
     } catch {
-      setSaveMessage({ kind: 'error', text: 'Could not save: browser storage is unavailable.' });
+      showToast({ kind: 'error', text: 'Could not save: browser storage is unavailable.' });
     }
   };
 
@@ -88,16 +99,6 @@ export function App() {
         </div>
 
         <div className="flex items-center gap-2">
-          {saveMessage && (
-            <span
-              className={`text-xs px-3 py-1 rounded-full transition-all duration-300 ${
-                saveMessage.kind === 'error' ? 'bg-danger text-white' : 'bg-white/14'
-              }`}
-              role="status"
-            >
-              {saveMessage.text}
-            </span>
-          )}
           <button
             type="button"
             className="px-4 py-1.5 text-sm rounded-md cursor-pointer border border-accent bg-accent text-white font-semibold hover:bg-accent-hover transition-colors"
@@ -123,6 +124,31 @@ export function App() {
           </div>
         )}
       </main>
+
+      {/* Toast */}
+      <div
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 ${
+          toast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
+        }`}
+      >
+        {toast && (
+          <div
+            className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl shadow-lg border text-sm font-medium pointer-events-auto ${
+              toast.kind === 'success'
+                ? 'bg-ok-soft text-ok-text border-ok-text/15'
+                : 'bg-danger-soft text-danger-text border-danger/15'
+            }`}
+            role="status"
+          >
+            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[0.7rem] ${
+              toast.kind === 'success' ? 'bg-ok-text/15' : 'bg-danger/15'
+            }`}>
+              {toast.kind === 'success' ? '✓' : '!'}
+            </span>
+            {toast.text}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

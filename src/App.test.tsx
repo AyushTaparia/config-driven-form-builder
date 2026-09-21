@@ -121,7 +121,7 @@ describe('App: preview and save', () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(screen.getByRole('button', { name: 'Save form' }));
-    expect(screen.getByRole('status')).toHaveTextContent(/saved/i);
+    expect(screen.getByRole('status')).toHaveTextContent(/saved successfully/i);
     expect(JSON.parse(window.localStorage.getItem(STORAGE_KEY)!).title).toBe('Employee onboarding');
 
     await user.click(screen.getByRole('button', { name: 'Add Text field' }));
