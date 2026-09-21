@@ -11,9 +11,11 @@ A config-driven form builder with a visual builder, live preview, and drag-to-re
 
 No external form libraries (no react-hook-form, Formik, or Zod).
 
-## Setup
+## Getting Started
 
 ```bash
+git clone <repository-url>
+cd form-studio
 npm install
 ```
 
