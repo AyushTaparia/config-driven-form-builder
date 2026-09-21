@@ -14,7 +14,11 @@ export function SelectField({ field, inputId, value, error, disabled, onChange, 
       <select
         id={inputId}
         name={field.key}
-        className="w-full font-[inherit] text-[0.95rem] py-2 px-2.5 border border-input rounded-md bg-white text-ink min-h-[38px] focus:border-accent focus:ring-1 focus:ring-accent outline-none disabled:bg-[#f0f2f5] disabled:text-muted"
+        className={`w-full font-[inherit] text-[0.9rem] py-2.5 px-3 border rounded-lg bg-white text-ink min-h-[42px] outline-none transition-all duration-150 disabled:bg-page disabled:text-muted appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%235b6675%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.23%207.21a.75.75%200%20011.06.02L10%2011.168l3.71-3.938a.75.75%200%20111.08%201.04l-4.25%204.5a.75.75%200%2001-1.08%200l-4.25-4.5a.75.75%200%2001.02-1.06z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-[right_0.5rem_center] bg-no-repeat pr-10 ${
+          error
+            ? 'border-danger focus:ring-2 focus:ring-danger/20'
+            : 'border-border focus:border-accent focus:ring-2 focus:ring-accent/20'
+        }`}
         value={current}
         disabled={disabled || !hasOptions}
         aria-required={field.validation?.required || undefined}

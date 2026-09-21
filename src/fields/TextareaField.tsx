@@ -7,7 +7,11 @@ export function TextareaField({ field, inputId, value, error, disabled, onChange
       <textarea
         id={inputId}
         name={field.key}
-        className="w-full font-[inherit] text-[0.95rem] py-2 px-2.5 border border-input rounded-md bg-white text-ink min-h-[38px] focus:border-accent focus:ring-1 focus:ring-accent outline-none disabled:bg-[#f0f2f5] disabled:text-muted placeholder:text-[#8791a0] resize-y"
+        className={`w-full font-[inherit] text-[0.9rem] py-2.5 px-3 border rounded-lg bg-white text-ink min-h-[42px] outline-none transition-all duration-150 disabled:bg-page disabled:text-muted placeholder:text-muted/60 resize-y ${
+          error
+            ? 'border-danger focus:ring-2 focus:ring-danger/20'
+            : 'border-border focus:border-accent focus:ring-2 focus:ring-accent/20'
+        }`}
         rows={4}
         value={typeof value === 'string' ? value : ''}
         placeholder={field.placeholder || undefined}

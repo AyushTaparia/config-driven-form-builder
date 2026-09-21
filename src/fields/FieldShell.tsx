@@ -39,30 +39,29 @@ interface FieldShellProps {
 /** Label, help text and error message: the chrome shared by every field type. */
 export function FieldShell({ field, inputId, error, hint, hideLabel, children }: FieldShellProps) {
   return (
-    <div className={`grid gap-1 ${error ? 'field--invalid' : ''}`}>
+    <div className={`grid gap-1.5 ${error ? 'field--invalid' : ''}`}>
       {!hideLabel && (
-        <label className="text-[0.85rem] font-semibold" htmlFor={inputId}>
+        <label className="text-[0.85rem] font-semibold text-ink" htmlFor={inputId}>
           {field.label}
           {field.validation?.required && (
-            <span className="text-danger" aria-hidden="true">
-              {' '}*
-            </span>
+            <span className="text-danger ml-0.5" aria-hidden="true">*</span>
           )}
         </label>
       )}
       {children}
       {field.helpText && (
-        <p className="text-[0.78rem] text-muted" id={helpId(inputId)}>
+        <p className="text-[0.78rem] text-muted leading-snug" id={helpId(inputId)}>
           {field.helpText}
         </p>
       )}
       {hint && (
-        <p className="text-[0.78rem] text-muted" id={hintId(inputId)}>
+        <p className="text-[0.78rem] text-muted leading-snug" id={hintId(inputId)}>
           {hint}
         </p>
       )}
       {error && (
-        <p className="text-[0.82rem] text-danger font-medium" id={errorId(inputId)} role="alert">
+        <p className="text-[0.8rem] text-danger font-medium flex items-center gap-1.5" id={errorId(inputId)} role="alert">
+          <span className="w-1 h-1 rounded-full bg-danger shrink-0" />
           {error}
         </p>
       )}

@@ -15,25 +15,32 @@ export interface FormRendererProps {
 
 function FormSkeleton() {
   return (
-    <div className="bg-surface border border-border rounded-lg p-6 grid gap-4" aria-busy="true" aria-live="polite">
+    <div className="bg-white border border-border rounded-2xl p-8 grid gap-5 shadow-sm" aria-busy="true" aria-live="polite">
       <p className="visually-hidden">Loading form…</p>
-      <div className="h-7 w-1/2 rounded-md skeleton-shimmer" />
-      <div className="h-[38px] rounded-md skeleton-shimmer" />
-      <div className="h-[38px] rounded-md skeleton-shimmer" />
-      <div className="h-[38px] rounded-md skeleton-shimmer" />
+      <div className="h-8 w-2/3 rounded-lg skeleton-shimmer" />
+      <div className="h-4 w-1/2 rounded skeleton-shimmer" />
+      <div className="h-[42px] rounded-lg skeleton-shimmer" />
+      <div className="h-[42px] rounded-lg skeleton-shimmer" />
+      <div className="h-[42px] rounded-lg skeleton-shimmer" />
     </div>
   );
 }
 
 function ConfigErrors({ issues }: { issues: ConfigIssue[] }) {
   return (
-    <div className="bg-surface border border-border rounded-lg p-6 grid gap-4">
-      <div className="py-2.5 px-3 rounded-md bg-danger-soft text-danger-text" role="alert">
-        <h2 className="text-base font-semibold mb-1">This form can{'\u2019'}t be shown yet</h2>
-        <p className="text-sm">Fix the following configuration problems in the builder:</p>
-        <ul className="list-disc pl-7 mt-1">
+    <div className="bg-white border border-border rounded-2xl p-8 grid gap-4 shadow-sm">
+      <div className="py-4 px-5 rounded-xl bg-danger-soft border border-danger/10" role="alert">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="w-8 h-8 rounded-full bg-danger/10 text-danger flex items-center justify-center text-sm font-bold">!</span>
+          <h2 className="text-lg font-bold text-danger-text">This form can{'\u2019'}t be shown yet</h2>
+        </div>
+        <p className="text-sm text-danger-text/80 mb-3">Fix the following configuration problems in the builder:</p>
+        <ul className="space-y-1.5">
           {[...new Set(issues.map((issue) => issue.message))].map((message) => (
-            <li key={message} className="text-sm">{message}</li>
+            <li key={message} className="text-sm text-danger-text flex items-start gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-danger/40 mt-1.5 shrink-0" />
+              {message}
+            </li>
           ))}
         </ul>
       </div>
@@ -94,32 +101,41 @@ export function FormRenderer({
 
   if (config.fields.length === 0) {
     return (
-      <div className="bg-surface border border-border rounded-lg p-6 grid gap-4">
-        <h2 className="text-xl font-bold">{config.title}</h2>
-        <div className="py-2 px-3 rounded-md bg-page text-sm">This form has no fields yet. Add fields in the builder.</div>
+      <div className="bg-white border border-border rounded-2xl p-8 grid gap-4 shadow-sm">
+        <h2 className="text-2xl font-bold text-ink">{config.title}</h2>
+        <div className="py-8 px-4 rounded-xl border-2 border-dashed border-border text-center">
+          <p className="text-muted text-sm">This form has no fields yet. Add fields in the builder.</p>
+        </div>
       </div>
     );
   }
 
   return (
     <form
-      className="bg-surface border border-border rounded-lg p-6 grid gap-4"
+      className="bg-white border border-border rounded-2xl p-8 grid gap-5 shadow-sm"
       noValidate
       onSubmit={handleSubmit}
       aria-labelledby={`${formId}-title`}
     >
-      <h2 className="text-xl font-bold" id={`${formId}-title`}>
-        {config.title}
-      </h2>
-      {config.description && <p className="text-muted mt-[-8px]">{config.description}</p>}
+      <div className="border-b border-border pb-5">
+        <h2 className="text-2xl font-bold text-ink" id={`${formId}-title`}>
+          {config.title}
+        </h2>
+        {config.description && <p className="text-muted text-sm mt-1.5">{config.description}</p>}
+      </div>
 
       {engine.submitAttempted && engine.errorCount > 0 && (
-        <p className="text-sm py-2 px-3 rounded-md bg-danger-soft text-danger-text" role="alert">
-          Please fix {engine.errorCount} {engine.errorCount === 1 ? 'field' : 'fields'} marked below.
-        </p>
+        <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-danger-soft border border-danger/10" role="alert">
+          <span className="w-7 h-7 rounded-full bg-danger/10 text-danger flex items-center justify-center text-xs font-bold shrink-0">
+            {engine.errorCount}
+          </span>
+          <p className="text-sm text-danger-text">
+            Please fix {engine.errorCount} {engine.errorCount === 1 ? 'field' : 'fields'} marked below.
+          </p>
+        </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-x-5 gap-y-4">
         {visibleFields.map((field) => {
           const Component = getFieldComponent(field.type);
           return (
@@ -142,22 +158,28 @@ export function FormRenderer({
       </div>
 
       {submitError && (
-        <p className="text-sm py-2 px-3 rounded-md bg-danger-soft text-danger-text" role="alert">
-          Submission failed: {submitError}
-        </p>
+        <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-danger-soft border border-danger/10" role="alert">
+          <span className="w-7 h-7 rounded-full bg-danger/10 text-danger flex items-center justify-center text-xs font-bold shrink-0">!</span>
+          <p className="text-sm text-danger-text">Submission failed: {submitError}</p>
+        </div>
       )}
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex items-center gap-3 pt-2 border-t border-border">
         <button
           type="submit"
-          className="px-4 py-2 text-sm rounded-md cursor-pointer border border-accent bg-accent text-white font-semibold hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-5 py-2.5 text-sm rounded-lg cursor-pointer border-0 bg-accent text-white font-semibold hover:bg-accent-hover active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           disabled={disabled || submitting}
         >
-          {submitting ? 'Submitting…' : submitLabel}
+          {submitting ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Submitting…
+            </span>
+          ) : submitLabel}
         </button>
         <button
           type="button"
-          className="px-4 py-2 text-sm rounded-md cursor-pointer border border-border bg-surface text-ink hover:border-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-5 py-2.5 text-sm rounded-lg cursor-pointer border border-border bg-white text-ink hover:bg-page transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={submitting}
           onClick={() => {
             engine.reset();
@@ -170,9 +192,12 @@ export function FormRenderer({
       </div>
 
       {result && (
-        <section className="py-2.5 px-3 rounded-md bg-ok-soft text-ok-text" role="status" aria-label="Submitted data">
-          <h3 className="text-base font-semibold mb-1">Submitted</h3>
-          <pre className="mt-2 p-2.5 bg-white rounded-md overflow-x-auto text-[0.82rem] text-ink" data-testid="submission-output">
+        <section className="py-4 px-5 rounded-xl bg-ok-soft border border-ok-text/10" role="status" aria-label="Submitted data">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-6 h-6 rounded-full bg-ok-text/15 text-ok-text flex items-center justify-center text-xs">✓</span>
+            <h3 className="text-sm font-bold text-ok-text">Submitted successfully</h3>
+          </div>
+          <pre className="p-4 bg-white rounded-lg border border-border overflow-x-auto text-[0.8rem] text-ink font-mono leading-relaxed" data-testid="submission-output">
             {JSON.stringify(result, null, 2)}
           </pre>
         </section>

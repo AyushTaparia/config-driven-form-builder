@@ -59,28 +59,17 @@ export function App() {
     }
   };
 
-  const startOver = () => {
-    try {
-      window.localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // ignore
-    }
-    dispatch({ type: 'replace', config: onboardingForm });
-    setSelectedId(onboardingForm.fields.find((f) => f.key === 'department')?.id ?? null);
-    setSaveMessage(null);
-  };
-
   return (
     <div className="h-screen flex flex-col bg-page">
-      <header className="flex flex-wrap items-center gap-3 px-5 py-2.5 bg-ink text-white shrink-0">
+      <header className="flex items-center gap-4 px-5 py-2.5 bg-ink text-white shrink-0 shadow-md">
         <h1 className="text-[1.05rem] font-bold tracking-wide mr-auto">Form Studio</h1>
 
-        <div className="inline-flex rounded-full border border-white/30 overflow-hidden" role="group" aria-label="Mode">
+        <div className="inline-flex rounded-full border border-white/25 overflow-hidden text-sm" role="group" aria-label="Mode">
           <button
             type="button"
             aria-pressed={mode === 'builder'}
-            className={`px-4 py-1.5 text-sm border-0 cursor-pointer transition-colors ${
-              mode === 'builder' ? 'bg-white text-ink font-semibold' : 'bg-transparent text-white hover:bg-white/10'
+            className={`px-4 py-1.5 border-0 cursor-pointer transition-all duration-200 ${
+              mode === 'builder' ? 'bg-white text-ink font-semibold' : 'bg-transparent text-white/80 hover:bg-white/10 hover:text-white'
             }`}
             onClick={() => setMode('builder')}
           >
@@ -89,8 +78,8 @@ export function App() {
           <button
             type="button"
             aria-pressed={mode === 'preview'}
-            className={`px-4 py-1.5 text-sm border-0 cursor-pointer transition-colors ${
-              mode === 'preview' ? 'bg-white text-ink font-semibold' : 'bg-transparent text-white hover:bg-white/10'
+            className={`px-4 py-1.5 border-0 cursor-pointer transition-all duration-200 ${
+              mode === 'preview' ? 'bg-white text-ink font-semibold' : 'bg-transparent text-white/80 hover:bg-white/10 hover:text-white'
             }`}
             onClick={() => setMode('preview')}
           >
@@ -98,10 +87,10 @@ export function App() {
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           {saveMessage && (
             <span
-              className={`text-xs px-2.5 py-1 rounded-full ${
+              className={`text-xs px-3 py-1 rounded-full transition-all duration-300 ${
                 saveMessage.kind === 'error' ? 'bg-danger text-white' : 'bg-white/14'
               }`}
               role="status"
@@ -111,14 +100,7 @@ export function App() {
           )}
           <button
             type="button"
-            className="px-3 py-1.5 text-sm rounded-md cursor-pointer border border-white/35 bg-transparent text-white hover:bg-white/10 transition-colors"
-            onClick={startOver}
-          >
-            Load sample
-          </button>
-          <button
-            type="button"
-            className="px-3 py-1.5 text-sm rounded-md cursor-pointer border border-accent bg-accent text-white font-semibold hover:bg-accent-hover transition-colors"
+            className="px-4 py-1.5 text-sm rounded-md cursor-pointer border border-accent bg-accent text-white font-semibold hover:bg-accent-hover transition-colors"
             onClick={save}
           >
             Save form
@@ -136,7 +118,7 @@ export function App() {
             onRemove={removeField}
           />
         ) : (
-          <div className="max-w-[760px] mx-auto p-4">
+          <div className="max-w-[720px] mx-auto py-8 px-4">
             <FormRenderer config={config} onSubmit={fakeSubmit} />
           </div>
         )}

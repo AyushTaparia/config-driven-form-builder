@@ -55,7 +55,7 @@ function TextProp(props: {
       </label>
       <input
         id={id}
-        className="w-full font-[inherit] text-[0.95rem] py-2 px-2.5 border border-input rounded-md bg-white text-ink min-h-[38px] focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+        className="w-full font-[inherit] text-[0.9rem] py-2 px-3 border border-border rounded-lg bg-white text-ink min-h-[38px] focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
         type={props.type ?? 'text'}
         step={props.type === 'number' ? 'any' : undefined}
         value={props.value}
@@ -92,7 +92,7 @@ function SelectProp(props: {
       </label>
       <select
         id={id}
-        className="w-full font-[inherit] text-[0.95rem] py-2 px-2.5 border border-input rounded-md bg-white text-ink min-h-[38px] focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+        className="w-full font-[inherit] text-[0.9rem] py-2 px-3 border border-border rounded-lg bg-white text-ink min-h-[38px] focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
       >
@@ -149,8 +149,8 @@ function VisibilityEditor({
   const valueId = useId();
 
   return (
-    <fieldset className="border border-border rounded-md p-2.5 grid gap-2.5 min-w-0">
-      <legend className="text-[0.85rem] font-bold px-1">Conditional visibility</legend>
+    <fieldset className="border border-border rounded-lg p-3 grid gap-3 min-w-0">
+      <legend className="text-[0.8rem] font-semibold text-muted uppercase tracking-wider px-1">Conditional visibility</legend>
       <SelectProp
         label="Show when field"
         value={rule?.field ?? ''}
@@ -226,12 +226,14 @@ function VisibilityEditor({
 export function PropertiesPanel({ config, field, issues, dispatch, onRemove }: PropertiesPanelProps) {
   if (!field) {
     return (
-      <aside className="p-3.5" aria-labelledby="props-title">
-        <h2 className="text-[0.95rem] font-bold mb-3" id="props-title">
+      <section className="p-4" aria-labelledby="props-title">
+        <h2 className="text-[0.8rem] font-semibold text-muted uppercase tracking-wider mb-3" id="props-title">
           Field properties
         </h2>
-        <p className="text-sm py-2 px-3 rounded-md bg-page text-ink">Select a field on the canvas to edit its properties.</p>
-      </aside>
+        <div className="py-8 px-4 rounded-lg border-2 border-dashed border-border text-center">
+          <p className="text-muted text-[0.85rem]">Select a field on the canvas to edit its properties.</p>
+        </div>
+      </section>
     );
   }
 
@@ -247,13 +249,13 @@ export function PropertiesPanel({ config, field, issues, dispatch, onRemove }: P
   const options = getSelectOptions(field);
 
   return (
-    <aside className="p-3.5 grid gap-3" aria-labelledby="props-title">
-      <h2 className="text-[0.95rem] font-bold" id="props-title">
+    <section className="p-4 grid gap-4" aria-labelledby="props-title">
+      <h2 className="text-[0.8rem] font-semibold text-muted uppercase tracking-wider" id="props-title">
         Field properties
       </h2>
 
       {otherIssues.length > 0 && (
-        <ul className="text-sm py-2 px-3 rounded-md bg-warn-soft text-warn-text" aria-label="Issues with this field">
+        <ul className="text-sm py-2 px-3 rounded-lg bg-warn-soft text-warn-text border border-warn-soft" aria-label="Issues with this field">
           {otherIssues.map((issue, i) => (
             <li key={`${issue.code}-${i}`}>{issue.message}</li>
           ))}
@@ -325,8 +327,8 @@ export function PropertiesPanel({ config, field, issues, dispatch, onRemove }: P
 
       {field.type === 'select' && <OptionsEditor options={field.options} onChange={(opts) => update({ options: opts })} />}
 
-      <fieldset className="border border-border rounded-md p-2.5 grid gap-2.5">
-        <legend className="text-[0.85rem] font-bold px-1">Validation</legend>
+      <fieldset className="border border-border rounded-lg p-3 grid gap-3">
+        <legend className="text-[0.8rem] font-semibold text-muted uppercase tracking-wider px-1">Validation</legend>
         <CheckProp label="Required field" checked={rules.required === true} onChange={(required) => updateRules({ required })} />
 
         {isTextual && (
@@ -344,20 +346,6 @@ export function PropertiesPanel({ config, field, issues, dispatch, onRemove }: P
               onChange={(v) => updateRules({ maxLength: toNumber(v) })}
             />
           </div>
-        )}
-        {isTextual && (
-          <>
-            <TextProp
-              label="Pattern (regex)"
-              value={rules.pattern ?? ''}
-              onChange={(pattern) => updateRules({ pattern: pattern || undefined })}
-            />
-            <TextProp
-              label="Pattern error message"
-              value={rules.patternMessage ?? ''}
-              onChange={(patternMessage) => updateRules({ patternMessage: patternMessage || undefined })}
-            />
-          </>
         )}
         {field.type === 'number' && (
           <div className="grid grid-cols-2 gap-2">
@@ -397,11 +385,11 @@ export function PropertiesPanel({ config, field, issues, dispatch, onRemove }: P
 
       <button
         type="button"
-        className="px-3 py-1.5 text-[0.9rem] rounded-md cursor-pointer border border-danger/20 bg-surface text-danger font-medium hover:bg-danger-soft transition-colors"
+        className="mt-1 w-full px-3 py-2 text-[0.85rem] rounded-lg cursor-pointer border border-danger/20 bg-white text-danger font-medium hover:bg-danger-soft transition-colors"
         onClick={() => onRemove(field.id)}
       >
         Remove this field
       </button>
-    </aside>
+    </section>
   );
 }

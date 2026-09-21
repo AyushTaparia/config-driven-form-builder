@@ -51,13 +51,6 @@ export function validateField(field: FieldConfig, raw: FieldValue | undefined): 
     if (typeof rules.maxLength === 'number' && trimmed.length > rules.maxLength) {
       return `Must be at most ${rules.maxLength} characters`;
     }
-    if (rules.pattern) {
-      try {
-        if (!new RegExp(rules.pattern).test(trimmed)) return rules.patternMessage || 'Invalid format';
-      } catch {
-        // An invalid pattern is a config problem (reported by validateConfig), not the user's.
-      }
-    }
   }
 
   return null;

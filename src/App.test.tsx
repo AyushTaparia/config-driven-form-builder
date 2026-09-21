@@ -81,26 +81,6 @@ describe('App: builder', () => {
     await user.click(screen.getByRole('button', { name: 'Remove option 1' }));
     expect(screen.queryByLabelText('Option 3 label')).not.toBeInTheDocument();
   });
-
-  it('applies pasted JSON and rejects invalid JSON with a clear message', async () => {
-    const user = userEvent.setup();
-    render(<App />);
-    await user.click(screen.getByText('Configuration JSON'));
-    const box = screen.getByLabelText(/edit the configuration directly/i);
-
-    await user.clear(box);
-    await user.click(box);
-    await user.paste('{ nope');
-    await user.click(screen.getByRole('button', { name: 'Apply JSON' }));
-    expect(screen.getByRole('alert')).toHaveTextContent(/not valid JSON/i);
-
-    await user.clear(box);
-    await user.click(box);
-    await user.paste('{"title":"Tiny","fields":[{"key":"a","type":"text","label":"Only field"}]}');
-    await user.click(screen.getByRole('button', { name: 'Apply JSON' }));
-    expect(screen.getByLabelText('Form title')).toHaveValue('Tiny');
-    expect(screen.getByRole('button', { name: 'Edit Only field' })).toBeInTheDocument();
-  });
 });
 
 describe('App: preview and save', () => {

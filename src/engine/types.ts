@@ -48,8 +48,6 @@ export interface ValidationRules {
   /** ISO dates (yyyy-mm-dd). */
   minDate?: string;
   maxDate?: string;
-  pattern?: string;
-  patternMessage?: string;
 }
 
 export interface FieldConfig {

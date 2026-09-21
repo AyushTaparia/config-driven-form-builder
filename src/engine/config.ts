@@ -139,14 +139,6 @@ export function validateConfig(config: FormConfig): ConfigIssue[] {
       }
     }
 
-    if (f.validation?.pattern) {
-      try {
-        new RegExp(f.validation.pattern);
-      } catch {
-        add('warning', 'pattern.invalid', `"${name}" has an invalid pattern, so the pattern rule is ignored.`);
-      }
-    }
-
     const rule = f.visibleWhen;
     if (rule) {
       if (rule.field === f.key) {
@@ -206,7 +198,7 @@ function parseValidation(raw: unknown): ValidationRules {
     const n = optionalNumber(raw[k]);
     if (n !== undefined) rules[k] = n;
   }
-  for (const k of ['minDate', 'maxDate', 'pattern', 'patternMessage'] as const) {
+  for (const k of ['minDate', 'maxDate'] as const) {
     const s = optionalString(raw[k]);
     if (s !== undefined && s !== '') rules[k] = s;
   }

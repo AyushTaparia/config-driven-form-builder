@@ -3,7 +3,6 @@ import { createField, validateConfig } from '../engine/config';
 import type { FieldType, FormConfig } from '../engine/types';
 import type { BuilderAction } from './builderReducer';
 import { Canvas } from './Canvas';
-import { JsonPanel } from './JsonPanel';
 import { Palette } from './Palette';
 import { PropertiesPanel } from './PropertiesPanel';
 
@@ -32,7 +31,7 @@ export function FormBuilder({ config, dispatch, selectedId, onSelect, onRemove }
         <Palette onAdd={handleAdd} />
       </aside>
 
-      {/* Center - Canvas + JSON */}
+      {/* Center - Canvas */}
       <div className="flex-1 min-w-0 h-full overflow-y-auto scrollbar-hidden bg-surface border-r border-border">
         <div className="p-4">
           <Canvas
@@ -43,9 +42,6 @@ export function FormBuilder({ config, dispatch, selectedId, onSelect, onRemove }
             onRemove={onRemove}
             dispatch={dispatch}
           />
-          <div className="mt-4 mb-8">
-            <JsonPanel config={config} dispatch={dispatch} />
-          </div>
         </div>
       </div>
 

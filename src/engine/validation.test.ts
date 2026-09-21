@@ -37,18 +37,6 @@ describe('validateField', () => {
     expect(validateField(f, '20.5')).toBeNull();
   });
 
-  it('uses the configured pattern message', () => {
-    const f = makeField('code', 'text', { validation: { pattern: '^[A-Z]{3}$', patternMessage: 'Use 3 capital letters' } });
-    expect(validateField(f, 'abc')).toBe('Use 3 capital letters');
-    expect(validateField(f, 'ABC')).toBeNull();
-  });
-
-  it('ignores an invalid regex instead of throwing', () => {
-    const f = makeField('code', 'text', { validation: { pattern: '([' } });
-    expect(() => validateField(f, 'anything')).not.toThrow();
-    expect(validateField(f, 'anything')).toBeNull();
-  });
-
   it('validates dates and date ranges', () => {
     const f = makeField('d', 'date', { validation: { minDate: '2026-01-01', maxDate: '2026-12-31' } });
     expect(validateField(f, '2026-02-30')).toBe('Enter a valid date');
