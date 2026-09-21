@@ -1,0 +1,30 @@
+import type { FieldComponentProps } from './types';
+import { FieldShell, describedBy } from './FieldShell';
+
+const HTML_TYPE = { text: 'text', number: 'number', email: 'email', date: 'date' } as const;
+
+/** text, number, email and date all share one <input>; only the `type` differs. */
+export function TextLikeField({ field, inputId, value, error, disabled, onChange, onBlur }: FieldComponentProps) {
+  const htmlType = HTML_TYPE[field.type as keyof typeof HTML_TYPE] ?? 'text';
+  return (
+    <FieldShell field={field} inputId={inputId} error={error}>
+      <input
+        id={inputId}
+        name={field.key}
+        className="w-full font-[inherit] text-[0.95rem] py-2 px-2.5 border border-input rounded-md bg-white text-ink min-h-[38px] focus:border-accent focus:ring-1 focus:ring-accent outline-none disabled:bg-[#f0f2f5] disabled:text-muted placeholder:text-[#8791a0]"
+        type={htmlType}
+        step={htmlType === 'number' ? 'any' : undefined}
+        inputMode={htmlType === 'number' ? 'decimal' : undefined}
+        autoComplete={htmlType === 'email' ? 'email' : undefined}
+        value={typeof value === 'string' ? value : ''}
+        placeholder={field.placeholder || undefined}
+        disabled={disabled}
+        aria-required={field.validation?.required || undefined}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy(inputId, field, error)}
+        onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
+      />
+    </FieldShell>
+  );
+}

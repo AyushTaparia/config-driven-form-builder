@@ -1,0 +1,111 @@
+import type { FormConfig } from '../engine/types';
+
+/**
+ * The employee onboarding form from the UI reference, expressed purely as data.
+ * Department only applies to full-time hires; the two extra conditional fields
+ * (weekly hours, contract end date) demonstrate visibility for other employment types.
+ */
+export const onboardingForm: FormConfig = {
+  version: 1,
+  title: 'Employee onboarding',
+  description: 'Provide the details required to create an employee profile.',
+  fields: [
+    {
+      id: 'full_name',
+      key: 'full_name',
+      type: 'text',
+      label: 'Full name',
+      placeholder: 'e.g. Aisha Khan',
+      width: 'full',
+      validation: { required: true, minLength: 2, maxLength: 80 },
+    },
+    {
+      id: 'department',
+      key: 'department',
+      type: 'select',
+      label: 'Department',
+      placeholder: 'Select department',
+      width: 'half',
+      options: [
+        { label: 'Engineering', value: 'engineering' },
+        { label: 'Design', value: 'design' },
+        { label: 'Product', value: 'product' },
+        { label: 'People & Culture', value: 'people' },
+        { label: 'Finance', value: 'finance' },
+        { label: 'Operations', value: 'operations' },
+      ],
+      validation: { required: true },
+      visibleWhen: { field: 'employment_type', operator: 'equals', value: 'full_time' },
+    },
+    {
+      id: 'work_email',
+      key: 'work_email',
+      type: 'email',
+      label: 'Work email',
+      placeholder: 'name@company.com',
+      width: 'half',
+      validation: { required: true },
+    },
+    {
+      id: 'joining_date',
+      key: 'joining_date',
+      type: 'date',
+      label: 'Joining date',
+      width: 'half',
+      validation: {},
+    },
+    {
+      id: 'employment_type',
+      key: 'employment_type',
+      type: 'select',
+      label: 'Employment type',
+      width: 'half',
+      defaultValue: 'full_time',
+      options: [
+        { label: 'Full-time', value: 'full_time' },
+        { label: 'Part-time', value: 'part_time' },
+        { label: 'Contract', value: 'contract' },
+        { label: 'Intern', value: 'intern' },
+      ],
+      validation: {},
+    },
+    {
+      id: 'weekly_hours',
+      key: 'weekly_hours',
+      type: 'number',
+      label: 'Weekly hours',
+      placeholder: 'e.g. 20',
+      helpText: 'Between 1 and 40 hours.',
+      width: 'half',
+      validation: { required: true, min: 1, max: 40 },
+      visibleWhen: { field: 'employment_type', operator: 'equals', value: 'part_time' },
+    },
+    {
+      id: 'contract_end_date',
+      key: 'contract_end_date',
+      type: 'date',
+      label: 'Contract end date',
+      width: 'half',
+      validation: { required: true },
+      visibleWhen: { field: 'employment_type', operator: 'equals', value: 'contract' },
+    },
+    {
+      id: 'additional_notes',
+      key: 'additional_notes',
+      type: 'textarea',
+      label: 'Additional notes',
+      placeholder: 'Add onboarding instructions',
+      width: 'full',
+      validation: { maxLength: 500 },
+    },
+    {
+      id: 'send_welcome_email',
+      key: 'send_welcome_email',
+      type: 'checkbox',
+      label: 'Send a welcome email on the joining date',
+      width: 'full',
+      defaultValue: true,
+      validation: {},
+    },
+  ],
+};
